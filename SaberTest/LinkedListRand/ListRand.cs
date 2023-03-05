@@ -1,4 +1,6 @@
 ﻿
+using System.Diagnostics;
+
 namespace LinkedListRand
 {
     public class ListRand
@@ -7,7 +9,7 @@ namespace LinkedListRand
         public ListNode Tail;
         public int Count;
         
-        
+
         public void Serialize(FileStream s)
         {
             using (var writer = new BinaryWriter(s))
@@ -21,12 +23,61 @@ namespace LinkedListRand
                     writer.WriteNode(node, indexedNodes);
                 }
             }
-           
         }
+        
+        
         public void Deserialize(FileStream s)
         {
-           
+            using (var reader = new BinaryReader(s))
+            {
+                Count = reader.ReadInt32();
+
+                List<ListNodeIndexed> readNodes = new List<ListNodeIndexed>(); 
+                while (reader.BaseStream.Position != reader.BaseStream.Length)
+                {
+                    readNodes.Add(reader.ReadNode());
+                }
+                
+                Dictionary<int, ListNode> indexedNodes = new Dictionary<int, ListNode>();
+                foreach (var node in readNodes)
+                {
+                    var listNode = new ListNode
+                    {
+                        Data = node.Data
+                    };
+                    indexedNodes.Add(node.CurrentIndex, listNode);
+                }
+                
+                foreach (var readNode in readNodes)
+                {
+                    var currentNode = indexedNodes[readNode.CurrentIndex];
+                    if (readNode.NextIndex == -1)
+                    {
+                        Tail = currentNode;
+                    }
+                    else
+                    {
+                        currentNode.Next = indexedNodes[readNode.NextIndex];
+                    }
+
+                    if (readNode.PrevIndex == -1)
+                    {
+                        Head = currentNode;
+                    }
+                    else
+                    {
+                        currentNode.Prev = indexedNodes[readNode.PrevIndex];
+                    }
+
+                    if (readNode.RandIndex != -1)
+                    {
+                        currentNode.Rand = indexedNodes[readNode.RandIndex];
+                    }
+                }
+
+            }
         }
+        
 
         private Dictionary<ListNode, int> IndexNodes()
         {
@@ -44,52 +95,6 @@ namespace LinkedListRand
             }
 
             return nodeDictionary;
-        }
-    }
-
-    public static class ListRandExtension
-    {
-        public static IEnumerable<ListNode> CreateEnumerable(this ListRand list)
-        {
-            List<ListNode> listNodes = new List<ListNode>();
-            
-            ListNode currentNode = list.Head;
-            while (currentNode != null)
-            {
-                listNodes.Add(currentNode);
-                currentNode = currentNode.Next;
-            }
-
-            return listNodes;
-        }
-
-        public static int GetIndex(this Dictionary<ListNode, int> indexedNodes, ListNode node)
-        {
-            int index = -1;
-            if (node != null)
-            {
-                index = indexedNodes[node];
-            }
-
-            return index;
-        }
-    }
-
-
-    public static class BinaryWriterExtension
-    {
-        public static void WriteNode(this BinaryWriter writer, ListNode node, Dictionary<ListNode, int> indexedNodes)
-        {
-            int currentId = indexedNodes.GetIndex(node);
-            int nextId = indexedNodes.GetIndex(node.Next);
-            int prevId = indexedNodes.GetIndex(node.Prev);
-            int randId = indexedNodes.GetIndex(node.Rand);
-
-            writer.Write(string.IsNullOrEmpty(node.Data) ? "" : node.Data);
-            writer.Write(currentId);
-            writer.Write(nextId);
-            writer.Write(prevId);
-            writer.Write(randId);
         }
     }
 }
