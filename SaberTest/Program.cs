@@ -1,7 +1,7 @@
 ﻿using LinkedListRand;
 
 
-var node0 = new ListNode() { Data = "1_ tst: + {g} - " };
+var node0 = new ListNode() { Data = null };
 var node1 = new ListNode() { Data = "2_tst: /n {g}" };
 var node2 = new ListNode() { Data = "3_tst: + {g/t} ] / " };
 
