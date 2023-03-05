@@ -1,5 +1,4 @@
-﻿
-namespace LinkedListRand;
+﻿namespace LinkedListRand;
 
 public static class BinaryWriterExtension
 {

@@ -1,13 +1,11 @@
-﻿
-
-using LinkedListRand;
+﻿using LinkedListRand;
 
 public static class ListRandExtension
 {
     public static IEnumerable<ListNode> CreateEnumerable(this ListRand list)
     {
         List<ListNode> listNodes = new List<ListNode>();
-            
+
         ListNode currentNode = list.Head;
         while (currentNode != null)
         {
@@ -34,14 +32,14 @@ public static class ListRandExtension
         Console.WriteLine($"Count {listRand.Count}");
         Console.WriteLine($"Head {listRand.Head.Data}");
         Console.WriteLine($"Tail {listRand.Tail.Data}");
-            
+
         foreach (var listNode in listRand.CreateEnumerable())
         {
             var data = listNode.Data;
             var nextData = listNode.Next != null ? listNode.Next.Data : "null";
             var prevData = listNode.Prev != null ? listNode.Prev.Data : "null";
             var randData = listNode.Rand != null ? listNode.Rand.Data : "null";
-                
+
             Console.WriteLine($"Data: {data} NextData: {nextData} PrevData: {prevData} RandData:{randData}");
         }
     }

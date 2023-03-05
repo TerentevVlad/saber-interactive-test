@@ -1,6 +1,5 @@
 ﻿using LinkedListRand;
 
-
 var node0 = new ListNode() { Data = "000" };
 var node1 = new ListNode() { Data = "111" };
 var node2 = new ListNode() { Data = "222" };
@@ -27,19 +26,10 @@ node4.Next = null;
 node4.Prev = node3;
 node4.Rand = node2;
 
-
-
-
-
-
-
 node1.Rand = node0;
 node2.Rand = node2;
 node3.Rand = node1;
 node4.Rand = node4;
-
-
-
 
 var list = new ListRand()
 {
@@ -47,9 +37,6 @@ var list = new ListRand()
     Tail = node4,
     Count = 3
 };
-
-
-
 
 list.Serialize(File.Open("SerializedList.txt", FileMode.Create));
 

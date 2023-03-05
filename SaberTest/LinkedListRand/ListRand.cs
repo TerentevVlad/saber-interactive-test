@@ -1,5 +1,4 @@
-﻿
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace LinkedListRand
 {
@@ -8,7 +7,7 @@ namespace LinkedListRand
         public ListNode Head;
         public ListNode Tail;
         public int Count;
-        
+
 
         public void Serialize(FileStream s)
         {
@@ -17,27 +16,27 @@ namespace LinkedListRand
                 var enumerable = this.CreateEnumerable();
                 Dictionary<ListNode, int> indexedNodes = IndexNodes();
                 writer.Write(Count);
-                
+
                 foreach (var node in enumerable)
                 {
                     writer.WriteNode(node, indexedNodes);
                 }
             }
         }
-        
-        
+
+
         public void Deserialize(FileStream s)
         {
             using (var reader = new BinaryReader(s))
             {
                 Count = reader.ReadInt32();
 
-                List<ListNodeIndexed> readNodes = new List<ListNodeIndexed>(); 
+                List<ListNodeIndexed> readNodes = new List<ListNodeIndexed>();
                 while (reader.BaseStream.Position != reader.BaseStream.Length)
                 {
                     readNodes.Add(reader.ReadNode());
                 }
-                
+
                 Dictionary<int, ListNode> indexedNodes = new Dictionary<int, ListNode>();
                 foreach (var node in readNodes)
                 {
@@ -47,7 +46,7 @@ namespace LinkedListRand
                     };
                     indexedNodes.Add(node.CurrentIndex, listNode);
                 }
-                
+
                 foreach (var readNode in readNodes)
                 {
                     var currentNode = indexedNodes[readNode.CurrentIndex];
@@ -74,10 +73,9 @@ namespace LinkedListRand
                         currentNode.Rand = indexedNodes[readNode.RandIndex];
                     }
                 }
-
             }
         }
-        
+
 
         private Dictionary<ListNode, int> IndexNodes()
         {
@@ -85,11 +83,11 @@ namespace LinkedListRand
 
             ListNode currentNode = Head;
             int currentIndex = 0;
-            
+
             while (currentNode != null)
             {
                 nodeDictionary.Add(currentNode, currentIndex);
-                
+
                 currentNode = currentNode.Next;
                 currentIndex++;
             }
